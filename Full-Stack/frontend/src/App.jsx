@@ -4,7 +4,7 @@ import HomePage from './components/HomePage';
 import RegistrationForm from './components/RegistrationForm';
 import AdminView from './components/AdminView';
 
-export const API_URL = 'http://localhost:5173';
+export const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [page, setPage] = useState('home');

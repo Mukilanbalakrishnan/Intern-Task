@@ -1,0 +1,4 @@
+[build]
+  base = "Full-Stack/frontend"
+    command = "npm run build"
+  publish = "dist"
