@@ -4,7 +4,8 @@ import HomePage from './components/HomePage';
 import RegistrationForm from './components/RegistrationForm';
 import AdminView from './components/AdminView';
 
-export const API_URL = import.meta.env.VITE_API_URL;
+export const API_URL = 'https://intern-task-backend.onrender.com';
+// export const API_URL = 'http://localhost:5173';
 
 function App() {
   const [page, setPage] = useState('home');
