@@ -6,21 +6,21 @@ const cors = require('cors');
 
 const app = express();
 
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', 
-  optionsSuccessStatus: 200 
-};
-
-app.use(cors(corsOptions));
-
-
+// Use a single, flexible CORS setup. This is best for deployment.
 app.use(cors());
+
+// This middleware is for parsing JSON bodies
 app.use(express.json());
+
+// Health Check Route for Render
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 
 // --- Database Connection ---
 const mongoURI = process.env.MONGO_URI;
 if (!mongoURI) {
-    console.error("FATAL ERROR: MONGO_URI is not defined. Please create a .env file.");
+    console.error("FATAL ERROR: MONGO_URI is not defined.");
     process.exit(1);
 }
 
@@ -37,4 +37,8 @@ app.use('/api/applicants', require('./routes/applicants'));
 
 // --- Start Server ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+// Use the more robust app.listen with the host specified
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
