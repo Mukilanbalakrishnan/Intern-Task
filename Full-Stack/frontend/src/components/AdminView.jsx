@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from '../App';
+
+// We no longer import from App.js
 
 const AdminView = () => {
     const [applicants, setApplicants] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // This is the correct and robust way to get the API URL.
+    // It reads the VITE_API_URL from your .env file locally, or from your Netlify settings when deployed.
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const fetchApplicants = async () => {
         try {
             setIsLoading(true);
+            // We add a check to make sure the URL is defined.
+            if (!API_URL) throw new Error("Configuration Error: VITE_API_URL is not defined. Please check your Netlify settings.");
+
             const response = await fetch(`${API_URL}/api/applicants`);
-            if (!response.ok) throw new Error('Failed to fetch');
+            if (!response.ok) throw new Error('Failed to fetch applicants');
             const data = await response.json();
             setApplicants(data);
         } catch (err) {
-            setError('An error occurred while fetching data.');
+            setError(err.message);
             console.error(err);
         } finally {
             setIsLoading(false);
@@ -23,11 +31,10 @@ const AdminView = () => {
 
     useEffect(() => {
         fetchApplicants();
-    }, []);
+    }, []); // This should only run once when the component mounts.
 
     const handleStatusChange = async (id, status) => {
         setApplicants(prev => prev.map(app => app._id === id ? { ...app, status } : app));
-
         try {
             const response = await fetch(`${API_URL}/api/applicants/${id}/status`, {
                 method: 'PUT',

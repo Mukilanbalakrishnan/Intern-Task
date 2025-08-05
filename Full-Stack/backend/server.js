@@ -9,13 +9,6 @@ const app = express();
 // Use a single, flexible CORS setup. This is best for deployment.
 app.use(cors());
 
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', 
-  optionsSuccessStatus: 200 
-};
-
-app.use(cors(corsOptions));
-
 // This middleware is for parsing JSON bodies
 app.use(express.json());
 

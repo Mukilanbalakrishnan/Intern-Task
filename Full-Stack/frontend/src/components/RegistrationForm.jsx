@@ -9,7 +9,7 @@ const RegistrationForm = () => {
   const [modal, setModal] = useState({ isOpen: false, type: '', text: '' });
 
   // This directly gets the backend URL from the environment variables.
-  const API_URL = import.meta.env.API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
