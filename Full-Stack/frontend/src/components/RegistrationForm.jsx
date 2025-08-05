@@ -8,6 +8,9 @@ const RegistrationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modal, setModal] = useState({ isOpen: false, type: '', text: '' });
 
+  // This directly gets the backend URL from the environment variables.
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -30,7 +33,8 @@ const RegistrationForm = () => {
     setIsSubmitting(true);
 
     try {
-        const response = await fetch('/api/applicants', {
+        // This now uses the full backend URL for the POST request.
+        const response = await fetch(`${API_URL}/api/applicants`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
@@ -56,28 +60,19 @@ const RegistrationForm = () => {
 
   return (
     <>
-      {/* Modal Component */}
       {modal.isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-8 rounded-lg shadow-2xl max-w-sm w-full text-center">
-            <h3 className={`text-2xl font-bold mb-4 ${modal.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-              {modal.type === 'success' ? 'Success!' : 'Attention'}
-            </h3>
+            <h3 className={`text-2xl font-bold mb-4 ${modal.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>{modal.type === 'success' ? 'Success!' : 'Attention'}</h3>
             <p className="text-gray-700 mb-6">{modal.text}</p>
-            <button
-              onClick={closeModal}
-              className="bg-teal-500 text-white font-bold py-2 px-8 rounded-md hover:bg-teal-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-            >
-              Close
-            </button>
+            <button onClick={closeModal} className="bg-teal-500 text-white font-bold py-2 px-8 rounded-md hover:bg-teal-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
-
       <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-xl">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Join Our Team</h2>
         <form onSubmit={handleSubmit} noValidate>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="mb-2"><label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Full Name</label><input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500" required /></div>
               <div className="mb-2"><label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label><input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500" required /></div>
               <div className="mb-2"><label htmlFor="mobile" className="block text-gray-700 text-sm font-bold mb-2">Mobile Number</label><input type="tel" id="mobile" name="mobile" value={formData.mobile} onChange={handleChange} className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500" required /></div>
